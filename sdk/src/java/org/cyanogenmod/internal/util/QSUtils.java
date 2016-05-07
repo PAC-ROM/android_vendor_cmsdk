@@ -134,6 +134,9 @@ public class QSUtils {
                 case QSConstants.TILE_BATTERY_SAVER:
                     removeTile = deviceSupportsPowerProfiles(context);
                     break;
+                case QSConstants.TILE_KERNEL:
+                    removeTile = !deviceContainsKernelAdiutor(context);
+                    break;
             }
             if (removeTile) {
                 iterator.remove();
@@ -304,6 +307,16 @@ public class QSUtils {
     public static boolean deviceSupportsPowerProfiles(Context context) {
         PerformanceManager pm = PerformanceManager.getInstance(context);
         return pm.getNumberOfProfiles() > 0;
+    }
+
+    public static boolean deviceContainsKernelAdiutor(Context context) {
+        PackageManager packageManager = context.getPackageManager();
+        try {
+            packageManager.getPackageInfo("com.grarak.kerneladiutor", PackageManager.GET_ACTIVITIES);
+            return true;
+        } catch (NameNotFoundException e) {
+            return false;
+        }
     }
 
     private static boolean supportsRootAccess() {
